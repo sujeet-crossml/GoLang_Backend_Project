@@ -11,21 +11,23 @@ import (
 
 var DB *sql.DB
 
-func ConnectDB(){
-	dsn := "root:password@tcp(localhost:3306)/shop?parseTime=true"
-	DB, err := sql.Open("mysql", dsn)	
-	if err != nil{
-		log.Fatal("Error opening DB: ",err)
+func ConnectDB() {
+	dsn := "mysql_user:user_password@tcp(localhost:3306)/go_shop?parseTime=true"
+
+	var err error
+	DB, err := sql.Open("mysql", dsn)
+	if err != nil {
+		log.Fatal("Error opening DB: ", err)
 	}
 
 	DB.SetMaxOpenConns(25)
 	DB.SetMaxIdleConns(25)
-	DB.SetConnMaxLifetime(5*time.Minute)
+	DB.SetConnMaxLifetime(5 * time.Minute)
 
-	if err := DB.Ping(); err != nil{
-		log.Fatal("Error conning to DB: ",err)
+	if err := DB.Ping(); err != nil {
+		log.Fatal("Error conning to DB: ", err)
 	}
-	
+
 	fmt.Println("Database connection established")
 
 }
