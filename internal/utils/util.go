@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -33,7 +34,7 @@ func CheckPassword(password, hash string) bool {
 
 func GenerateToken(userID int) (string, error) {
 	claims := jwt.MapClaims{
-		"User_id": userID,
+		"user_id": userID,
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -46,13 +47,19 @@ func ValidateToken(tokenString string) (int, error) {
 	})
 
 	if err != nil || !token.Valid {
+		fmt.Println("Token error", err)
 		return 0, err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return 0, err
+		return 0, fmt.Errorf("invalid claims")
 	}
 
-	return int(claims["user_id"].(float64)), nil
+	userID, ok := claims["user_id"].(float64)
+	if !ok {
+		return 0, fmt.Errorf("user_id not found in token")
+	}
+
+	return int(userID), nil
 }

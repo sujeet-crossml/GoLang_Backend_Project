@@ -12,7 +12,7 @@ import (
 var DB *sql.DB
 
 func ConnectDB() {
-	dsn := ":@tcp(localhost:3306)/go_shop?parseTime=true"
+	dsn := "@tcp(localhost:3306)/go_shop?parseTime=true"
 
 	var err error
 	DB, err = sql.Open("mysql", dsn)
